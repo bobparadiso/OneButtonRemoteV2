@@ -4,7 +4,7 @@
 #include "Trace.h"
 
 #define MAX_BOOT_DELAY 3000
-#define MAX_SPEECH_DELAY 1600
+#define MAX_SPEECH_DELAY 3000
 
 #define speech Serial1
 
@@ -20,11 +20,11 @@ void setupSpeech()
 	cmd("n3");
 	//cmd("n1");
 	
-	//cmd("v18"); //loudest
-	cmd("v1");
+	cmd("v18"); //loudest
+	//cmd("v5");
 	
-	//cmd("w175");
-	cmd("w200");
+	//cmd("w150");
+	cmd("w200"); //fast-ish
 }
 
 //

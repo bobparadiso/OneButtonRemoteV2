@@ -12,6 +12,9 @@
 LiquidCrystal_I2C lcd(0x27, 2, 1, 0, 4, 5, 6, 7, BACKLIGHT_PIN, POSITIVE);
 //LiquidCrystal_I2C lcd(0x26, 2, 1, 0, 4, 5, 6, 7, BACKLIGHT_PIN, POSITIVE);
 
+//for display on a Raspberry Pi w/ large monitor if desired
+#define DisplaySerial Serial2
+
 //
 void setupDisplay()
 {
@@ -24,6 +27,8 @@ void setupDisplay()
 	lcd.home();
 	lcd.cursor();
 	lcd.setBacklight(0);
+	
+	DisplaySerial.begin(9600);
 }
 
 //
@@ -38,4 +43,5 @@ void display(char *str)
 	lcd.clear();
 	lcd.home();
 	lcd.print(str);
+	DisplaySerial.println(str);
 }

@@ -8,14 +8,13 @@
 #define MAX_IR_CODE_TIMINGS 128
 
 #define CONTROLLER_ADDRESS 1
-#define LIVING_ROOM_ADDRESS 2
-#define BEDROOM_ADDRESS 3
+#define MY_ADDRESS 2
 
 // Singleton instance of the radio driver
 RH_RF69 driver(8, 3); //cs, irq
 
 // Class to manage message delivery and receipt, using the driver declared above
-RHReliableDatagram manager(driver, BEDROOM_ADDRESS);
+RHReliableDatagram manager(driver, MY_ADDRESS);
 
 //
 void setup() 
@@ -62,7 +61,7 @@ void logIR(uint16_t *data)
 
 		tracef("%4u\t%4u\r\n", ton, toff);
 
-		if (!toff || !ton)
+		if (!toff)
 			break;
 	}
 

@@ -7,7 +7,10 @@
 #include "IR_codes.h"
 #include "IR_tx_RF.h"
 
-RH_RF69 driver(15, 24); //cs, irq
+//MOSI 11
+//MISO 12
+//SCK 13
+RH_RF69 driver(15, 24); //CS, IRQ
 
 // Class to manage message delivery and receipt, using the driver declared above
 RHReliableDatagram manager(driver, CONTROLLER_ADDRESS);
@@ -17,7 +20,7 @@ uint8_t buf[RH_RF69_MAX_MESSAGE_LEN + 1];
 
 uint8_t txAddr = BEDROOM_ADDRESS;
 
-int sendData(uint8_t addr, uint8_t *data, uint8_t txLen);
+int8_t sendData(uint8_t addr, uint8_t *data, uint8_t txLen);
 
 //
 void setTxAddr(uint8_t addr)
@@ -48,7 +51,7 @@ void logRF(uint8_t *buf, uint8_t len)
 }
 
 //
-int sendData(uint8_t addr, uint8_t *data, uint8_t txLen)
+int8_t sendData(uint8_t addr, uint8_t *data, uint8_t txLen)
 {
 	//tracef("sending data to addr: %u\r\n", addr);
 	//logRF(data, txLen);
@@ -81,17 +84,17 @@ int sendData(uint8_t addr, uint8_t *data, uint8_t txLen)
 }
 
 // 
-void sendCode(const char *name)
+int8_t sendCode_IR_RF(const char *name)
 {
 	uint16_t IRbuf[MAX_IR_CODE_TIMINGS * 2 + 1];
 	memset(IRbuf, 0, sizeof(IRbuf));
 	loadIR(name, IRbuf);
 	logIR(IRbuf);
-	sendCode(IRbuf);
+	return sendCode_IR_RF(IRbuf);
 }
 
 // 
-void sendCode(const uint16_t *code)
+int8_t sendCode_IR_RF(const uint16_t *code)
 {
 	Serial.println("sendCode\r\n");
 
@@ -121,7 +124,8 @@ void sendCode(const uint16_t *code)
 		if (off == 0)
 		{
 			*txPtr++ = 0; //sending extra end byte since receiver will sometimes zero out last byte
-			sendData(txAddr, txBuf, txLen + 1);
+			if (sendData(txAddr, txBuf, txLen + 1) != 0)
+				return -1;
 			txPtr = txBuf + 1; //start filling next buf
 			break;
 		}
@@ -129,12 +133,16 @@ void sendCode(const uint16_t *code)
 		if (txLen > RH_RF69_MAX_MESSAGE_LEN - (TIMING_SIZE + 1))
 		{
 			*txPtr++ = 0; //sending extra end byte since receiver will sometimes zero out last byte
-			sendData(txAddr, txBuf, txLen + 1);
+			if (sendData(txAddr, txBuf, txLen + 1) != 0)
+				return -1;
 			txPtr = txBuf + 1; //start filling next buf
 		}
 	}
 
 	txBuf[0] = 's';
 	txBuf[1] = 0; //sending extra end byte since receiver will sometimes zero out last byte
-	sendData(txAddr, txBuf, 2);
+	if (sendData(txAddr, txBuf, 2) != 0)
+		return -1;
+	
+	return 0;
 }

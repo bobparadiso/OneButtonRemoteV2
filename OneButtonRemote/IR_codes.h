@@ -3,8 +3,7 @@
 
 #include <stdint.h>
 
-#define MAX_IR_CODE_TIMINGS 128
-
+#define MAX_IR_CODE_TIMINGS 256
 void IR_codes_init();
 void storeIR(const char *name, uint16_t *data);
 void loadIR(const char *name, uint16_t *data);

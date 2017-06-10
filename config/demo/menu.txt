@@ -1,0 +1,30 @@
+!main
+
+!living room tv,2
+*power,once,tvpow
+*volume up,hold,tvvup,5,250
+*volume down,hold,tvvdwn,5,250
+*channel,number,tv,2,250
+
+!bedroom tv,3
+*power,once,tvpow
+*volume up,hold,tvvup,5,250
+*volume down,hold,tvvdwn,5,250
+*channel,number,tv,2,250
+
+!movie,2
+*power,once,mvpow
+*play,once,mvplay
+*pause,once,mvpause
+*next,hold,mvnext,1,1000
+*previous,hold,mvprev,1,750
+*stop,once,mvstop
+
+!radio,3
+*power,once,rdpow
+*volume up,hold,rdvup,5,250
+*volume down,hold,rddwn,5,250
+*station,number,rd,4,250
+*next,hold,rdnext,1,500
+*previous,hold,rdprev,1,500
+*scan,once,rdscan

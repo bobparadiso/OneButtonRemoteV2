@@ -7,7 +7,7 @@
 
 void setupIR_TX_RF();
 void setTxAddr(uint8_t addr);
-void sendCode(const char *name);
-void sendCode(const uint16_t *code);
+int8_t sendCode_IR_RF(const char *name);
+int8_t sendCode_IR_RF(const uint16_t *code);
 
 #endif

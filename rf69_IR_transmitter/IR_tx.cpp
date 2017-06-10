@@ -30,7 +30,7 @@ void sendBurst(uint16_t carrier, long microsecs)
 	while (microsecs > 0)
 	{
 		*outIRpin |= IRpin;
-		delayMicroseconds(halfWaveLength);
+		delayMicroseconds(waveLength - halfWaveLength); //for odd wavelengths
 		*outIRpin &= ~IRpin;
 		delayMicroseconds(halfWaveLength);
 
@@ -51,10 +51,11 @@ void sendCode(const uint16_t *code)
 	{
 		int on = *ptr++;
 		int off = *ptr++;
-		sendBurst(carrier, on);
+		if (on) //check if there's a burst to send or if this is the continuation of the last SPACE
+			sendBurst(carrier, on);
 		delayMicroseconds(off);
-		if (off == 0)
-			break;
+		if (!off) //a SPACE of 0 indicates finished
+			return;
 	}
 
 	trace("sent\r\n");

@@ -26,7 +26,7 @@ void storeIR(const char *name, uint16_t *data)
 	{
 		uint16_t ton = *ptr++;
 		uint16_t toff = *ptr++;
-		if (!toff || !ton)
+		if (!toff)
 			break;
 	}
 	uint16_t dataLen = ptr - data;
@@ -74,7 +74,7 @@ void logIR(uint16_t *data)
 
 		tracef("%4u\t%4u\r\n", ton, toff);
 
-		if (!toff || !ton)
+		if (!toff)
 			break;
 	}
 
