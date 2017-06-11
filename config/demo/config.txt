@@ -2,13 +2,13 @@
 #All COMMENT (ignored) lines start with a "#".
 #All MENU lines start with a "!".
 #All OPTION lines start with a "*".
+#General SETTINGS are on a single line that starts with "$".
 #Empty lines are skipped over but make reading by humans easier.
 #The parts of any line are separated by a ",".
 #The first part of any line gives the NAME, which is what is spoken aloud and shown on the screen when in the menu.
-#The first MENU line defines the name of the 'main' menu.
-#The 'main' menu does not get any OPTION lines after it, they are dynamically created based on the menus that follow.
-#For all other menus, the OPTION lines immediately after define the options for that menu.
+#The OPTION lines immediately after any MENU line define the options for that menu.
 #The number after a menu NAME is the IR transmitter ID used for all options in that menu. There may be multiple transmitters to hit devices in various locations easier.
+#The 'main' menu is not explicitly defined, its options are dynamically created based on the menus that follow.
 
 #All OPTIONS have a type:
 #once: send the IR code once
@@ -21,7 +21,14 @@
 #---number of digits
 #---delay placed in between digit IR code sends
 
-!main
+#general settings: should appear exactly once
+#---main menu name
+#---menu option delay
+#---voice: 0 to 8
+#---volume: -48 to 18
+#---words per minute: 75 to 600
+$main,250,7,18,170
+#$main,500,2,18,75
 
 !tv,2
 *power,once,tvpow

@@ -10,14 +10,7 @@
 
 #define DEBOUNCE_ITERATIONS 10000 //iterations
 
-//slow
-//#define MENU_ITEM_DELAY 500
-//#define DIGIT_MENU_ITEM_DELAY 250
-//fast
-#define MENU_ITEM_DELAY 10
-#define DIGIT_MENU_ITEM_DELAY 10
-
-#define MENU_CONFIG_NAME "menu.txt"
+#define MENU_CONFIG_NAME "config.txt"
 #define MAX_OPTIONS 10 //and menus
 
 enum OPTION_TYPE {OPTION_TYPE_MENU, OPTION_TYPE_ONCE, OPTION_TYPE_HOLD, OPTION_TYPE_NUMBER, OPTION_TYPE_UNDEF};
@@ -39,6 +32,8 @@ struct Menu
 };
 
 char mainMenuName[16];
+uint16_t menuOptionDelay;
+
 uint8_t currentMenu;
 Menu menu[MAX_OPTIONS + 1];
 
@@ -120,7 +115,7 @@ void loadMenus()
 	File file = SD.open(MENU_CONFIG_NAME, FILE_READ);
 	
 	char buf[64];
-	int8_t curMenu = -1;
+	int8_t curMenu = 0;
 	int8_t curOption;
 	
 	Menu *mainMenu = &menu[0];
@@ -132,6 +127,20 @@ void loadMenus()
 		//no more lines to read
 		if (!strlen(buf))
 			break;
+
+		//general settings
+		if (buf[0] == '$')
+		{
+			char *name = strtok(buf + 1, ",");
+			stpcpy(mainMenuName, name);
+
+			menuOptionDelay = atoi(strtok(NULL, ","));
+
+			//speech params
+			setVoice(atoi(strtok(NULL, ",")));
+			setVolume(atoi(strtok(NULL, ",")));
+			setWPM(atoi(strtok(NULL, ",")));
+		}
 		
 		//new menu
 		if (buf[0] == '!')
@@ -139,23 +148,15 @@ void loadMenus()
 			curMenu++;
 			char *name = strtok(buf + 1, ",");
 
-			//name main menu
-			if (curMenu == 0)
-			{
-				strcpy(mainMenuName, name);
-			}
 			//store this menu as an option of main menu
-			else
-			{
-				MenuOption *o = &mainMenu->option[curMenu - 1];
-				strcpy(o->name, name);
-				o->type = OPTION_TYPE_MENU;
-				o->loaded = 1;
+			MenuOption *o = &mainMenu->option[curMenu - 1];
+			strcpy(o->name, name);
+			o->type = OPTION_TYPE_MENU;
+			o->loaded = 1;
 #ifdef SEND_CODE_IR_RF
-				o->param[0] = atoi(strtok(NULL, ",")); //tx addr
+			o->param[0] = atoi(strtok(NULL, ",")); //tx addr
 #endif
-				curOption = -1;
-			}
+			curOption = -1;
 		}
 		
 		//new option
@@ -218,7 +219,7 @@ uint8_t chooseDigit()
 		char buf[2];
 		sprintf(buf, "%d", ID);
 		say(buf);
-		delay(DIGIT_MENU_ITEM_DELAY);
+		delay(menuOptionDelay);
 
 		Serial.print(F("checking button\r\n"));
 		
@@ -316,7 +317,7 @@ void runMenu(uint8_t menuID)
 		}
 		
 		say(o->name);
-		delay(MENU_ITEM_DELAY);
+		delay(menuOptionDelay);
 
 		Serial.print(F("checking button\r\n"));
 		if (buttonPressed)
@@ -340,7 +341,7 @@ void runMenu(uint8_t menuID)
 		sprintf(mainMenuPhrase, "%s menu", mainMenuName);
 		
 		say(mainMenuPhrase);
-		delay(MENU_ITEM_DELAY);
+		delay(menuOptionDelay);
 
 		Serial.print(F("checking button\r\n"));
 		

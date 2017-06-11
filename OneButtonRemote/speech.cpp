@@ -16,15 +16,30 @@ void setupSpeech()
 {
 	speech.begin(9600);
 	delay(MAX_BOOT_DELAY);
+}
 
-	cmd("n3");
-	//cmd("n1");
-	
-	cmd("v18"); //loudest
-	//cmd("v5");
-	
-	//cmd("w150");
-	cmd("w200"); //fast-ish
+//
+void setVoice(int16_t i)
+{
+	char buf[10];
+	sprintf(buf, "n%d", i);
+	cmd(buf);
+}
+
+//
+void setVolume(int16_t i)
+{
+	char buf[10];
+	sprintf(buf, "v%d", i);
+	cmd(buf);
+}
+
+//
+void setWPM(int16_t i)
+{
+	char buf[10];
+	sprintf(buf, "w%d", i);
+	cmd(buf);
 }
 
 //
