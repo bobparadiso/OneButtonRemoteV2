@@ -1,12 +1,29 @@
+#This file defines menus, the options within a menu, and settings.
+#All COMMENT (ignored) lines start with a "#".
+#All MENU lines start with a "!".
+#All OPTION lines start with a "*".
+#Empty lines are skipped over but make reading by humans easier.
+#The parts of any line are separated by a ",".
+#The first part of any line gives the NAME, which is what is spoken aloud and shown on the screen when in the menu.
+#The first MENU line defines the name of the 'main' menu.
+#The 'main' menu does not get any OPTION lines after it, they are dynamically created based on the menus that follow.
+#For all other menus, the OPTION lines immediately after define the options for that menu.
+#The number after a menu NAME is the IR transmitter ID used for all options in that menu. There may be multiple transmitters to hit devices in various locations easier.
+
+#All OPTIONS have a type:
+#once: send the IR code once
+#---IR code to send
+#hold: send the IR code for as long as button is held down
+#---minimum number of times to send code even if button is released
+#---delay placed in between IR code sends
+#number: user selects a specified number of digits (for a channel, station, etc.)
+#---IR code name prefix for all digits sent
+#---number of digits
+#---delay placed in between digit IR code sends
+
 !main
 
-!living room tv,2
-*power,once,tvpow
-*volume up,hold,tvvup,5,250
-*volume down,hold,tvvdwn,5,250
-*channel,number,tv,2,250
-
-!bedroom tv,3
+!tv,2
 *power,once,tvpow
 *volume up,hold,tvvup,5,250
 *volume down,hold,tvvdwn,5,250
@@ -20,10 +37,10 @@
 *previous,hold,mvprev,1,750
 *stop,once,mvstop
 
-!radio,3
+!radio,2
 *power,once,rdpow
 *volume up,hold,rdvup,5,250
-*volume down,hold,rddwn,5,250
+*volume down,hold,rdvdwn,5,250
 *station,number,rd,4,250
 *next,hold,rdnext,1,500
 *previous,hold,rdprev,1,500
